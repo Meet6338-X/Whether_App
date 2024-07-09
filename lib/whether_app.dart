@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -16,15 +17,16 @@ class WeatherScreen extends StatefulWidget {
 }
 
 class _WeatherScreenState extends State<WeatherScreen> {
+  TextEditingController cityNameController = TextEditingController();
   double currenttemp = 0;
   String currentsky = '';
   double currenthumidity = 0;
   double currentPressure = 0;
   double windspeed = 0.0;
+  String cityname = 'Pune';
 
   Future<Map<String, dynamic>> getcurrentWeather() async {
     try {
-      String cityname = 'Pune';
       final res = await http.get(
         Uri.parse(
           'https://api.openweathermap.org/data/2.5/forecast?q=$cityname&APPID=$openWhetherAPIKey',
@@ -78,6 +80,23 @@ class _WeatherScreenState extends State<WeatherScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  TextField(
+                    controller: cityNameController,
+                    decoration: InputDecoration(
+                      hintText: '   Enter City Name',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.horizontal(
+                          left: Radius.circular(25),
+                          right: Radius.circular(25),
+                        ),
+                      ),
+                    ),
+                    onSubmitted: (value) {
+                      setState(() {
+                        cityname = value;
+                      });
+                    },
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: ClipRRect(
